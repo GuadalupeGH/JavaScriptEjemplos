@@ -137,22 +137,52 @@
 //Agregar un elemento a la lista
 var form = document.getElementById("formAgregar");
 var lista = document.getElementById("items");
+var filtro = document.getElementById('filtro');
 
+// evento sumit del formulario
 form.addEventListener("submit", agregarItem);
+//evento click de la lista
+lista.addEventListener("click", eliminar); 
+//Evento del teclado en el campo de filtro
+filtro.addEventListener('keyup', filtrarItems)
 
+//funcion para agregar un Item a la lista 
 function agregarItem(e) {
   e.preventDefault(); //cancelar el evento si este es cancelable sin detener el resto del funcionamineto del evento -- puede ser llamado nuevamente
-  var nuevoItem = document.getElementById("item").value;
+  var nuevoItem = document.getElementById("item").value; //Obtiene el valor del item
 
-  var li = document.createElement("li");
+  var li = document.createElement("li"); 
   li.className = "list-group-item";
-  li.appendChild(document.createTextNode(nuevoItem));
+  li.appendChild(document.createTextNode(nuevoItem)); //añade el nodo
 
   var botonDel = document.createElement("button");
-  botonDel.className = "btn btn-danger btn-sm float-right";
+  botonDel.className = "btn btn-danger btn-sm float-right eliminar";
   botonDel.appendChild(document.createTextNode("X"));
   li.appendChild(botonDel);
   console.log(li);
 
   lista.appendChild(li);
+}
+
+//funcion para eliminar un item de la lista
+function eliminar(e) {
+  if(e.target.classList.contains('eliminar')){
+    if(confirm('¿Seguro que desea eliminar el elemento?')){
+      var li = e.target.parentElement;
+      lista.removeChild(li);
+    }
+  }
+}
+//funcion para filtrar elementos de la lista 
+function filtrarItems(e){
+  var texto = e.target.value.toLowerCase();
+  var items = lista.getElementsByTagName('li');  
+  Array.from(items).forEach(function(item){
+    var itemNobre = item.firstChild.textContent;
+    if (itemNobre.toLocaleLowerCase().indexOf(texto) != -1) {
+      item.style.display = 'block';
+    }else{
+      item.style.display = 'none';
+    }
+  });
 }
